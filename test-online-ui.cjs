@@ -1,0 +1,14 @@
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const elements=new Map();const el=id=>{if(!elements.has(id))elements.set(id,{value:'',innerHTML:'',textContent:'',focus(){}});return elements.get(id)};
+const context={window:{},document:{querySelector:el,activeElement:null,addEventListener(){}},sessionStorage:{getItem(){return null}},location:{search:''},URLSearchParams,Intl,Date,setInterval(){},clearTimeout(){},setTimeout(){},console};
+vm.createContext(context);vm.runInContext(fs.readFileSync(__dirname+'/online.js','utf8').replace('window.BiddioOnline={open,stop};','window.testRender=s=>{active=true;state=s;render()};window.BiddioOnline={open,stop};'),context);
+const s={code:'ABC123',me:2,phase:'lobby',players:[{name:'A',score:0},{name:'B',score:0},{name:'C',score:0}],passed:[],ready:[],found:[],round:0,bid:2,bidder:0,turn:1,category:{title:'Kategorie',note:'Hinweis',tag:'TEST',max:15},solutions:['A','B'],deadline:Date.now()+20000};
+const render=()=>{context.window.testRender(s);return el('#app').innerHTML};
+assert.match(render(),/Alle drei sind bereit/);s.me=0;assert.match(render(),/Mit 3 Spielern starten/);
+s.phase='auction';s.me=2;s.passed=[2];assert.match(render(),/Du hast gepasst/);s.me=1;assert.match(render(),/duel-bid-form/);
+s.phase='challenge';s.me=0;assert.match(render(),/duel-answer-form/);s.me=2;assert.doesNotMatch(render(),/id="duel-answer-form"/);
+s.phase='result';s.result={success:false,winners:[1,2],challenger:0,count:1,bid:2,points:200};assert.match(render(),/B & C \(je Person\)/);
+s.phase='finished';s.history=[{title:'Kategorie',...s.result}];s.players[2].score=500;assert.match(render(),/Du gewinnst!/);
+s.players[1].score=500;assert.match(render(),/Gleichstand: B & C/);
+s.players[0].name='<script>';s.players[0].score=900;assert.match(render(),/&lt;script&gt; gewinnt!/);assert.doesNotMatch(render(),/<script>/);
+console.log('PASS: three-player lobby, passed-player message, answer permissions in UI, shared rewards, third-player victory, tied winners, escaped names.');

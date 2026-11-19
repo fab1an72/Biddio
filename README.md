@@ -1,52 +1,47 @@
-# Biddio – Solo und Online-Duell
+# Biddio – Solo und Online mit 2–3 Personen
 
-## Update: 40 Kategorien
+## Update 0.5.0
 
-28 neue, überwiegend einfache Allgemeinwissens-Kategorien. Beide Spielmodi nutzen dieselbe Auswahl. Die bisherigen Kategorien bleiben erhalten.
+70 Kategorien insgesamt, darunter 18 neue Listen mit jeweils mindestens sieben Antworten. Neue offene Themen nutzen ausdrücklich gekennzeichnete, feste Auswahllisten; nicht jedes fachlich richtige Beispiel ist enthalten. Im Online-Modus werden ausschließlich Kategorien mit mindestens sieben Antworten verwendet. Solo bleiben auch die kürzeren Listen erhalten. Gebote sind weiterhin auf maximal 15 Antworten begrenzt; die Antwortzeit beträgt 30 Sekunden.
 
-Für ein bestehendes GitHub-Repository: Alle Dateien aus diesem Ordner hochladen und vorhandene Dateien ersetzen. Danach Commit changes. Falls Render bereits verbunden ist, dort prüfen, ob die neue Version automatisch bereitgestellt wird; andernfalls die neueste Version manuell bereitstellen.
+## Bestehende Website aktualisieren
 
-Die separate Biddio.html im Archiv ist die direkt im Browser spielbare Solo-Version. Online-Duelle benötigen weiterhin den laufenden Server.
+1. Das ZIP entpacken.
+2. Alle Dateien aus dem Ordner `biddio` in das bestehende GitHub-Repository hochladen: Add file → Upload files. Gleiche Namen ersetzen die bisherige Version. Nicht den übergeordneten Ordner oder das ZIP hochladen.
+3. Commit changes wählen.
+4. Bei einem verbundenen Hostingdienst die Bereitstellung des neuen Commits abwarten oder auslösen. Danach die Website neu laden und einen neuen Spielraum erstellen.
 
-Der Online-Freundemodus ist implementiert, aber noch nicht öffentlich bereitgestellt. Die HTML-Datei allein stellt keinen Spielserver bereit.
+Die separate `Biddio.html` ist die offline spielbare Solo-Version. Online benötigt ihr den laufenden Server; dieses Update veröffentlicht ihn nicht automatisch.
 
-## Starten
+## Online-Regeln
 
-Voraussetzung: Node.js 20 oder neuer. Es werden keine zusätzlichen Pakete benötigt.
-
-1. Dieses Verzeichnis entpacken.
-2. Im Verzeichnis `node server.mjs` ausführen.
-3. Auf dem Servergerät `http://localhost:3000` öffnen.
-4. Auf einem zweiten Gerät im gleichen WLAN `http://<LAN-IP-des-Servergeräts>:3000` öffnen. Die Firewall muss eingehende Verbindungen auf diesem Port zulassen.
-
-Für zwei Geräte an verschiedenen Orten muss der Server auf einem öffentlich erreichbaren Node.js-Host laufen. Startbefehl: `node server.mjs`. Der Port wird über die Umgebungsvariable `PORT` bestimmt (Standard 3000). Davor gehört ein HTTPS-Endpunkt des Hostinganbieters. Beide Spieler öffnen dieselbe Website. Der Dienst benötigt genau einen laufenden Prozess/eine Instanz, weil Spielräume im Arbeitsspeicher gehalten werden. Kein statisches Hosting und kein Mehrinstanz-Betrieb.
-
-## Online-Duell
-
-- „Online gegen Freund“ wählen, Namen eingeben und Raum erstellen.
-- Link oder sechsstelligen Raumcode an den Freund weitergeben.
-- Der Gastgeber startet, sobald beide im Raum sind.
-- Abwechselnd höher bieten oder passen. Pro Zug 20 Sekunden.
-- Ohne erstes Gebot wird bei Zeitablauf automatisch 1 geboten. Bei einem bestehenden Gebot gilt Zeitablauf als Passen.
-- Wer das höchste Gebot hält, beantwortet innerhalb von 30 Sekunden die Kategorie.
+- „Online mit Freunden“ wählen und Raum erstellen. Bis zu zwei weitere Personen treten mit Link oder Code bei.
+- Der Gastgeber kann mit zwei oder drei Spielern starten. Für drei Spieler erst starten, wenn alle drei im Raum sind.
+- Alle starten mit 0 Punkten. Fünf Runden, der erste Bietende wechselt reihum.
+- Pro Bietzug 20 Sekunden: höher bieten oder passen. Wer passt, scheidet nur aus der aktuellen Auktion aus und kann diese Runde nicht erneut bieten.
+- Sobald alle anderen gepasst haben oder das maximale Gebot erreicht wurde, antwortet der Höchstbietende innerhalb von 30 Sekunden.
 - Erfolg: 100 Punkte je gebotener Antwort für den Antwortenden.
-- Misserfolg: dieselben Punkte für den Gegner.
-- Beide starten mit 0 Punkten. Fünf Runden; Gleichstände sind möglich.
-- Für die nächste Kategorie müssen beide „Bereit“ wählen.
+- Misserfolg: Jeder andere Spieler erhält 100 Punkte je gebotener Antwort. Bei drei Spielern bekommen also beide Gegner die volle Punktzahl.
+- Ohne erstes Gebot wird bei Zeitablauf automatisch 1 geboten. Danach zählt Zeitablauf als Passen.
+- Alle müssen für die nächste Runde „Bereit“ wählen. Nach fünf Runden gewinnt der höchste Punktestand; geteilte Siege sind möglich.
 
-## Grenzen der ersten Version
+## Server starten
 
-- Räume verfallen nach zwei Stunden und gehen bei Serverneustart verloren.
-- Anmeldung im Raum bleibt in der aktuellen Browser-Tab-Sitzung gespeichert. Neuladen desselben Tabs verbindet wieder; ein neuer Tab hat nicht automatisch dieselbe Sitzung.
-- Bei Verbindungsabbruch laufen Fristen auf dem Server weiter. Es gibt noch keinen automatischen Ersatzspieler und keine Pause.
-- Kein Chat, kein Zuschauerbeitritt und keine Konten. Die Codes sind zum Teilen unter Freunden gedacht.
-- Die Antwortlisten sind festgelegt und enthalten gängige Namensvarianten. Keine KI-Antwortprüfung.
-- Der Solo-Modus enthält die Antwortlisten lokal. Das ist ein Gelegenheitsspiel, kein gegen Nachschlagen abgesicherter Wettbewerb.
+Node.js 20 oder neuer. Keine zusätzlichen Pakete erforderlich.
 
-## Prüfung
+Im Verzeichnis mit `package.json`: `node server.mjs`. Lokal: `http://localhost:3000`.
+Andere Geräte im gleichen WLAN: `http://<LAN-IP>:3000` (Firewall muss Verbindungen zulassen).
 
-`npm test` oder einzeln `node test.cjs` und `node test-online.mjs`.
+Für verschiedene Orte: Node.js-Webservice mit HTTPS, Build `npm install`, Start `node server.mjs`, Root Directory leer, wenn diese Dateien im Repository-Hauptverzeichnis liegen. Der Server nutzt `PORT` oder 3000 und bindet an `0.0.0.0`. Alle öffnen dieselbe Website. Genau eine Instanz verwenden: Räume liegen im Arbeitsspeicher.
 
-Geprüft: Solo-Spiel, Kategorien und Namensvarianten, zwei Spielersitzungen, Zugrechte, Punkte, Zeitablauf, doppelte Antworten, fünf Runden, abgelaufene Räume und Geheimhaltung der Sitzungsschlüssel in Spielstatus-Antworten.
+## Grenzen
 
-Noch nicht geprüft: visueller Browsertest und tatsächliche Verbindung zweier Geräte über das Internet. Veröffentlichung war auf dem Erstellungsgerät durch fehlende Entwicklerwerkzeuge blockiert.
+Räume verfallen nach zwei Stunden oder einem Serverneustart. Verlassen beendet die Partie für alle. Bei Verbindungsabbruch laufen Fristen weiter. Neuladen desselben Tabs stellt die Sitzung wieder her. Keine Konten, Pause oder Ersatzspieler. Die Antwortlisten sind festgelegt und enthalten Namensvarianten; keine KI-Prüfung. Solo-Antwortlisten sind lokal einsehbar.
+
+## Prüfungen
+
+`npm test` prüft Solo, alle Kategorien/Aliase, Zwei- und Dreispieler-Partien, Zugrechte, Passen, Zeitablauf, Punkte, Bereitschaft, fünf Runden und Anzeigen einschließlich geteilter Siege. UI-Prüfung mit simuliertem DOM; kein visueller Browsertest und kein Test über drei echte Geräte.
+
+`node build-standalone.cjs` baut zusätzlich die Offline-Datei unter `../outputs/Biddio.html`.
+
+Quellen für ergänzte Speziallisten: [BIPM SI-Vorsilben](https://www.bipm.org/en/measurement-units/si-prefixes), [Disney Schneewittchen](https://movies.disney.com/snow-white-and-the-seven-dwarfs), [Paris 2024 Sportarten](https://parigi2024.coni.it/en/sports.html), [Peking 2022 Disziplinen](https://english.visitbeijing.com.cn/article/47OOd1wOd64).
