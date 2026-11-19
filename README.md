@@ -1,5 +1,13 @@
 # Biddio – Solo und Online-Duell
 
+## Update: 40 Kategorien
+
+28 neue, überwiegend einfache Allgemeinwissens-Kategorien. Beide Spielmodi nutzen dieselbe Auswahl. Die bisherigen Kategorien bleiben erhalten.
+
+Für ein bestehendes GitHub-Repository: Alle Dateien aus diesem Ordner hochladen und vorhandene Dateien ersetzen. Danach Commit changes. Falls Render bereits verbunden ist, dort prüfen, ob die neue Version automatisch bereitgestellt wird; andernfalls die neueste Version manuell bereitstellen.
+
+Die separate Biddio.html im Archiv ist die direkt im Browser spielbare Solo-Version. Online-Duelle benötigen weiterhin den laufenden Server.
+
 Der Online-Freundemodus ist implementiert, aber noch nicht öffentlich bereitgestellt. Die HTML-Datei allein stellt keinen Spielserver bereit.
 
 ## Starten
